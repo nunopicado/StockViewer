@@ -22,20 +22,13 @@ object fMain: TfMain
     Width = 890
     Height = 618
     Align = alClient
-    ColCount = 6
+    ColCount = 1
+    DefaultColWidth = 140
     FixedCols = 0
+    RowCount = 2
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect]
     TabOrder = 0
     OnDblClick = gridDblClick
-    ExplicitTop = 0
-    ExplicitHeight = 651
-    ColWidths = (
-      73
-      130
-      331
-      142
-      91
-      88)
   end
   object sbMain: TStatusBar
     Left = 0
@@ -61,19 +54,19 @@ object fMain: TfMain
     Height = 33
     Align = alTop
     TabOrder = 2
-    object Label1: TLabel
+    object lblTaxRegistrationNumber: TLabel
       Left = 16
       Top = 8
       Width = 21
       Height = 13
       Caption = 'NIF:'
     end
-    object lblEdNIF: TLabel
+    object lblEdTaxRegistrationNumber: TLabel
       Left = 43
       Top = 8
-      Width = 102
+      Width = 182
       Height = 13
-      Caption = 'lblEdNIF'
+      AutoSize = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -11
@@ -81,19 +74,19 @@ object fMain: TfMain
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object Label2: TLabel
+    object lblFiscalYear: TLabel
       Left = 264
       Top = 8
       Width = 52
       Height = 13
       Caption = 'Ano Fiscal:'
     end
-    object lblEdAnoFiscal: TLabel
+    object lblEdFiscalYear: TLabel
       Left = 322
       Top = 8
-      Width = 44
+      Width = 79
       Height = 13
-      Caption = 'lblEdNIF'
+      AutoSize = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -11
@@ -101,19 +94,19 @@ object fMain: TfMain
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object Label3: TLabel
+    object lblEndDate: TLabel
       Left = 480
       Top = 8
       Width = 113
       Height = 13
       Caption = 'Data de fim de per'#237'odo:'
     end
-    object lblEdData: TLabel
+    object lblEdEndDate: TLabel
       Left = 599
       Top = 8
-      Width = 66
+      Width = 116
       Height = 13
-      Caption = 'lblEdNIF'
+      AutoSize = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -11
@@ -121,7 +114,7 @@ object fMain: TfMain
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object Label4: TLabel
+    object lblNoStock: TLabel
       Left = 721
       Top = 8
       Width = 80
@@ -131,9 +124,9 @@ object fMain: TfMain
     object lblEdNoStock: TLabel
       Left = 807
       Top = 8
-      Width = 44
+      Width = 72
       Height = 13
-      Caption = 'lblEdNIF'
+      AutoSize = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -11
@@ -143,6 +136,7 @@ object fMain: TfMain
     end
   end
   object dlgOpen: TOpenDialog
+    Filter = 'Ficheiro XML de invent'#225'rios v1.02|*.xml'
     Left = 576
     Top = 224
   end

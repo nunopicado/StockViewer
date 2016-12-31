@@ -5,29 +5,32 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.ComCtrls, Vcl.StdCtrls,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, uStockFile, Obj.SSI.IMatrix;
 
 type
-  TfMain = class(TForm)
+  TfMain = class(TForm, IStockView)
     grid: TStringGrid;
     dlgOpen: TOpenDialog;
     sbMain: TStatusBar;
     pnlHeader: TPanel;
-    Label1: TLabel;
-    lblEdNIF: TLabel;
-    Label2: TLabel;
-    lblEdAnoFiscal: TLabel;
-    Label3: TLabel;
-    lblEdData: TLabel;
-    Label4: TLabel;
+    lblTaxRegistrationNumber: TLabel;
+    lblEdTaxRegistrationNumber: TLabel;
+    lblFiscalYear: TLabel;
+    lblEdFiscalYear: TLabel;
+    lblEndDate: TLabel;
+    lblEdEndDate: TLabel;
+    lblNoStock: TLabel;
     lblEdNoStock: TLabel;
     procedure gridDblClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+    const
+         cProductCount = 1;
+         cStockFile    = 2;
     procedure LoadXML(Filename: String);
   public
-    { Public declarations }
+    function UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
+    function UpdateData(StockData: IMatrix<String>): IStockView;
   end;
 
 var
@@ -35,32 +38,25 @@ var
 
 implementation
 
-uses
-    Stock_1_2;
-
 {$R *.dfm}
+
+function TfMain.UpdateData(StockData: IMatrix<String>): IStockView;
+var
+   Col: Integer;
+   Row: Integer;
+begin
+     grid.ColCount := StockData.ColCount;
+     grid.RowCount := StockData.RowCount;
+     sbMain.Panels[cProductCount].Text := Pred(StockData.RowCount).ToString + ' artigos inventariados';
+     for Col := 0 to Pred(StockData.ColCount) do
+         for Row := 0 to Pred(StockData.RowCount) do
+             grid.Cells[Col, Row] := StockData.Cell(Col, Row);
+end;
 
 procedure TfMain.FormCreate(Sender: TObject);
 begin
      if (ParamCount = 1) and (FileExists(ParamStr(1)))
         then LoadXML(ParamStr(1));
-
-     dlgOpen.Filter := 'Ficheiro XML de inventários v1.02|*.xml';
-     sbMain.Panels[1].Text := '';
-     sbMain.Panels[2].Text := '';
-
-     lblEdNIF.Caption       := '';
-     lblEdAnoFiscal.Caption := '';
-     lblEdData.Caption      := '';
-     lblEdNoStock.Caption   := '';
-
-     grid.RowCount := 2;
-     grid.Cells[0,0] := 'Categoria';
-     grid.Cells[1,0] := 'Código';
-     grid.Cells[2,0] := 'Descrição';
-     grid.Cells[3,0] := 'Cód. Barras';
-     grid.Cells[4,0] := 'Quantidade';
-     grid.Cells[5,0] := 'Unidade';
 end;
 
 procedure TfMain.gridDblClick(Sender: TObject);
@@ -69,34 +65,25 @@ begin
         then LoadXML(dlgOpen.FileName);
 end;
 
-procedure TfMain.LoadXML(Filename: String);
+function TfMain.UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
 const
-     NoStock: Array [Boolean] of String = ('Não','Sim');
-var
-   xml: IXMLStockFile;
-   i: Integer;
+     cNoStock: Array [Boolean] of String = ('Não','Sim');
 begin
-     xml := LoadStockFile (Filename);
+     lblEdTaxRegistrationNumber.Caption := NIF.ToString;
+     lblEdFiscalYear.Caption            := FiscalYear.ToString;
+     lblEdEndDate.Caption               := DateTimeToStr(EndPeriod);
+     lblEdNoStock.Caption               := cNoStock[NoStock];
+end;
 
-     grid.RowCount := xml.Stock.Count + 1;
-
-     for i := 0 to xml.Stock.Count-1 do
-         begin
-              grid.Cells[0,i+1] := xml.Stock[i].ProductCategory;
-              grid.Cells[1,i+1] := xml.Stock[i].ProductCode;
-              grid.Cells[2,i+1] := xml.Stock[i].ProductDescription;
-              grid.Cells[3,i+1] := xml.Stock[i].ProductNumberCode;
-              grid.Cells[4,i+1] := xml.Stock[i].ClosingStockQuantity;
-              grid.Cells[5,i+1] := xml.Stock[i].UnitOfMeasure;
-         end;
-
-     lblEdNIF.Caption       := IntToStr(xml.StockHeader.TaxRegistrationNumber);
-     lblEdAnoFiscal.Caption := IntToStr(xml.StockHeader.FiscalYear);
-     lblEdData.Caption      := xml.StockHeader.EndDate;
-     lblEdNoStock.Caption   := NoStock[xml.StockHeader.NoStock];
-
-     sbMain.Panels[1].Text := IntToStr(xml.Stock.Count) + ' artigos inventariados';
-     sbMain.Panels[2].Text := Filename;
+procedure TfMain.LoadXML(Filename: String);
+begin
+     sbMain.Panels[cStockFile].Text := Filename;
+     TStockFile.New(
+                    Self,
+                    FileName,
+                    TMatrix<String>.New
+                   )
+               .Open;
 end;
 
 end.
