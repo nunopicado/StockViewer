@@ -1,4 +1,4 @@
-unit uStockFile;
+﻿unit uStockFile;
 
 interface
 

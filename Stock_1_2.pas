@@ -1,11 +1,11 @@
-
+ï»¿
 {*******************************************************************************************}
 {                                                                                           }
 {                                     XML Data Binding                                      }
 {                                                                                           }
 {         Generated on: 2015-01-07 13:10:05                                                 }
-{       Generated from: E:\Dropbox\Delphi\nPOSitivo\Certificação\Inventario\Stock_1_2.xsd   }
-{   Settings stored in: E:\Dropbox\Delphi\nPOSitivo\Certificação\Inventario\Stock_1_2.xdb   }
+{       Generated from: E:\Dropbox\Delphi\nPOSitivo\CertificaÃ§Ã£o\Inventario\Stock_1_2.xsd   }
+{   Settings stored in: E:\Dropbox\Delphi\nPOSitivo\CertificaÃ§Ã£o\Inventario\Stock_1_2.xdb   }
 {                                                                                           }
 {*******************************************************************************************}
 

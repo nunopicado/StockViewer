@@ -1,4 +1,4 @@
-program StockViewer;
+﻿program StockViewer;
 
 uses
   Vcl.Forms,

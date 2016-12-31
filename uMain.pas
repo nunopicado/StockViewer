@@ -1,4 +1,4 @@
-unit uMain;
+﻿unit uMain;
 
 interface
 
@@ -67,7 +67,7 @@ end;
 
 function TfMain.UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
 const
-     cNoStock: Array [Boolean] of String = ('N�o','Sim');
+     cNoStock: Array [Boolean] of String = ('Não','Sim');
 begin
      lblEdTaxRegistrationNumber.Caption := NIF.ToString;
      lblEdFiscalYear.Caption            := FiscalYear.ToString;
