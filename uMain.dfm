@@ -3,7 +3,7 @@ object fMain: TfMain
   Top = 0
   Caption = 'Visualizador de Invent'#225'rio'
   ClientHeight = 660
-  ClientWidth = 880
+  ClientWidth = 906
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,26 +16,10 @@ object fMain: TfMain
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object grid: TStringGrid
-    Left = 0
-    Top = 33
-    Width = 880
-    Height = 608
-    Align = alClient
-    ColCount = 1
-    DefaultColWidth = 140
-    FixedCols = 0
-    RowCount = 2
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect]
-    TabOrder = 0
-    OnDblClick = gridDblClick
-    ExplicitWidth = 890
-    ExplicitHeight = 618
-  end
   object sbMain: TStatusBar
     Left = 0
     Top = 641
-    Width = 880
+    Width = 906
     Height = 19
     Panels = <
       item
@@ -48,17 +32,14 @@ object fMain: TfMain
       item
         Width = 50
       end>
-    ExplicitTop = 651
-    ExplicitWidth = 890
   end
   object pnlHeader: TPanel
     Left = 0
     Top = 0
-    Width = 880
+    Width = 906
     Height = 33
     Align = alTop
-    TabOrder = 2
-    ExplicitWidth = 890
+    TabOrder = 1
     object lblTaxRegistrationNumber: TLabel
       Left = 16
       Top = 8
@@ -140,9 +121,104 @@ object fMain: TfMain
       ParentFont = False
     end
   end
+  object gridStock: TcxGrid
+    Left = 0
+    Top = 33
+    Width = 906
+    Height = 608
+    Align = alClient
+    TabOrder = 2
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = 'MoneyTwins'
+    object gridStockDBTableView1: TcxGridDBTableView
+      OnDblClick = gridDblClick
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = dsStock
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.CellSelect = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderFilterButtonShowMode = fbmButton
+      object gridStockDBTableView1Column1: TcxGridDBColumn
+        Caption = 'Categoria'
+        DataBinding.FieldName = 'ProductCategory'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object gridStockDBTableView1Column2: TcxGridDBColumn
+        Caption = 'C'#243'digo Produto'
+        DataBinding.FieldName = 'ProductCode'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        HeaderAlignmentHorz = taCenter
+        Width = 120
+      end
+      object gridStockDBTableView1Column3: TcxGridDBColumn
+        Caption = 'Descri'#231#227'o'
+        DataBinding.FieldName = 'ProductDescription'
+        HeaderAlignmentHorz = taCenter
+        Width = 300
+      end
+      object gridStockDBTableView1Column4: TcxGridDBColumn
+        Caption = 'C'#243'digo Barras'
+        DataBinding.FieldName = 'ProductNumberCode'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        HeaderAlignmentHorz = taCenter
+        Width = 150
+      end
+      object gridStockDBTableView1Column5: TcxGridDBColumn
+        Caption = 'Exist'#234'ncia'
+        DataBinding.FieldName = 'ClosingStockQuantity'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        HeaderAlignmentHorz = taCenter
+        Width = 120
+      end
+      object gridStockDBTableView1Column6: TcxGridDBColumn
+        Caption = 'Unidade'
+        DataBinding.FieldName = 'UnitOfMeasure'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        HeaderAlignmentHorz = taCenter
+        Width = 120
+      end
+    end
+    object gridStockLevel1: TcxGridLevel
+      GridView = gridStockDBTableView1
+    end
+  end
   object dlgOpen: TOpenDialog
     Filter = 'Ficheiro XML de invent'#225'rios v1.02|*.xml'
     Left = 576
     Top = 224
+  end
+  object csvStock: TJvCsvDataSet
+    CsvFieldDef = 
+      'ProductCategory:$1,ProductCode:$60,ProductDescription:$200,Produ' +
+      'ctNumberCode:$60,ClosingStockQuantity:&,UnitOfMeasure:$20'
+    Separator = ';'
+    LoadsFromFile = False
+    SavesChanges = False
+    AutoBackupCount = 0
+    EnquoteBackslash = True
+    AlwaysEnquoteStrings = True
+    AlwaysEnquoteFloats = True
+    Left = 64
+    Top = 416
+  end
+  object dsStock: TDataSource
+    DataSet = csvStock
+    Left = 64
+    Top = 480
   end
 end
