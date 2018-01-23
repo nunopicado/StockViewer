@@ -4,7 +4,7 @@ interface
 
 uses
     Stock_1_2
-  , Obj.SSI.IMatrix
+  , RO.IMatrix
   ;
 
 type

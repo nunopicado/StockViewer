@@ -7,7 +7,7 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   uStockFile in 'uStockFile.pas',
-  Obj.SSI.IMatrix in '..\[Reusable Objects]\Obj.SSI.IMatrix.pas';
+  RO.IMatrix;
 
 {$R *.res}
 
