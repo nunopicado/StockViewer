@@ -93,3 +93,5 @@ ehthumbs.db
 Thumbs.db
 
 *.dproj
+
+*.$$$
