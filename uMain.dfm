@@ -1,10 +1,9 @@
 object fMain: TfMain
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
   Caption = 'Visualizador de Invent'#225'rio'
-  ClientHeight = 670
-  ClientWidth = 890
+  ClientHeight = 660
+  ClientWidth = 880
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,21 +18,23 @@ object fMain: TfMain
   object grid: TStringGrid
     Left = 0
     Top = 33
-    Width = 890
-    Height = 618
+    Width = 880
+    Height = 608
     Align = alClient
     ColCount = 1
     DefaultColWidth = 140
     FixedCols = 0
     RowCount = 2
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect]
     TabOrder = 0
     OnDblClick = gridDblClick
+    ExplicitWidth = 890
+    ExplicitHeight = 618
   end
   object sbMain: TStatusBar
     Left = 0
-    Top = 651
-    Width = 890
+    Top = 641
+    Width = 880
     Height = 19
     Panels = <
       item
@@ -46,14 +47,17 @@ object fMain: TfMain
       item
         Width = 50
       end>
+    ExplicitTop = 651
+    ExplicitWidth = 890
   end
   object pnlHeader: TPanel
     Left = 0
     Top = 0
-    Width = 890
+    Width = 880
     Height = 33
     Align = alTop
     TabOrder = 2
+    ExplicitWidth = 890
     object lblTaxRegistrationNumber: TLabel
       Left = 16
       Top = 8
