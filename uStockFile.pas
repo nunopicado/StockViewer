@@ -36,6 +36,7 @@ implementation
 uses
     SysUtils
   , RO.TMatrix
+  , Variants
   ;
 
 { TStockFile }
@@ -75,7 +76,7 @@ begin
     FView.UpdateHeader(
       TaxRegistrationNumber,
       FiscalYear,
-      StrToDate(EndDate),
+      VarToDateTime(EndDate),
       NoStock
     );
 end;
