@@ -45,16 +45,21 @@ constructor TStockFile.Create(StockView: IStockView; StockFile: string; Data : I
 begin
   FView := StockView;
   FXml  := LoadStockFile(StockFile);
-  FData := Data.Resize(
-    FXml.Stock.ChildNodes[1].ChildNodes.Count,
-    FXml.Stock.Count + 1
-  );
+  if FXml.Stock.ChildNodes.Count > 1
+    then
+      FData := Data.Resize(
+        FXml.Stock.ChildNodes[1].ChildNodes.Count,
+        FXml.Stock.Count + 1
+      );
 end;
 
 procedure TStockFile.Data;
 var
   i: Integer;
 begin
+  if FXml.Stock.ChildNodes.Count <= 1
+    then Exit;
+
   for i := 0 to Pred(FXml.Stock.ChildNodes[1].ChildNodes.Count) do
     FData.Edit(i, 0, FXml.Stock.ChildNodes[1].ChildNodes[i].NodeName.Substring(3));
   for i := 0 to Pred(FXml.Stock.Count) do
