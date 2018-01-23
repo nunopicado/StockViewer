@@ -95,3 +95,5 @@ Thumbs.db
 *.dproj
 
 *.$$$
+
+*.res
