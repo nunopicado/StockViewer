@@ -72,7 +72,8 @@ begin
         FData.Edit(4, Succ(i), ClosingStockQuantity);
         FData.Edit(5, Succ(i), UnitOfMeasure);
       end;
-  FView.UpdateData(FData);
+  FView
+    .UpdateData(FData);
 end;
 
 procedure TStockFile.Header;
