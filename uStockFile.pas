@@ -9,11 +9,13 @@ uses
 
 type
   IStockView = interface
+  ['{BB46A868-8D6B-4145-BF18-3933F60D0C2C}']
     function UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
     function UpdateData(StockData: IMatrix<string>): IStockView;
   end;
 
   IStockFile = interface
+  ['{BCC7FDC6-37BF-4B3F-B629-E35C52C45521}']
     function Open: IStockFile;
   end;
 
