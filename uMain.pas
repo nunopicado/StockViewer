@@ -36,6 +36,7 @@ type
     lblEdNoStock: TLabel;
     procedure gridDblClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private const
     cProductCount = 1;
     cStockFile    = 2;
@@ -71,6 +72,10 @@ begin
 end;
 
 procedure TfMain.FormCreate(Sender: TObject);
+begin
+end;
+
+procedure TfMain.FormShow(Sender: TObject);
 begin
   if (ParamCount = 1) and (FileExists(ParamStr(1)))
     then LoadXML(ParamStr(1));
