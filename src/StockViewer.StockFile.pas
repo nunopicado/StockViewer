@@ -79,9 +79,10 @@ constructor TStockFile.Create(const StockFile: string);
 begin
   FXml := LoadStockFile(StockFile);
   if FXml.Stock.ChildNodes.Count > 0
-    then FHeader := TStockHeader.New(FXml.StockHeader);
-  if FXml.Stock.ChildNodes.Count > 1
-    then FData := TStockData.New(FXml.Stock);
+    then begin
+      FHeader := TStockHeader.New(FXml.StockHeader);
+      FData   := TStockData.New(FXml.Stock);
+    end;
 end;
 
 function TStockFile.Data: IStockData;
