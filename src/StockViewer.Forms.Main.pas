@@ -104,7 +104,15 @@ implementation
 procedure TfMain.actExportExecute(Sender: TObject);
 begin
   if dlgSave.Execute
-    then csvStock.SaveToFile(dlgSave.FileName);
+    then begin
+      if FileExists(dlgSave.FileName) and
+          (MessageDlg('O ficheiro já existe. Sobreescrever?', mtConfirmation, [mbYes, mbNo], 0) = mrNo)
+        then begin
+          ShowMessage('Nenhum ficheiro guardado');
+          Exit;
+        end;
+      csvStock.SaveToFile(dlgSave.FileName);
+    end;
 end;
 
 procedure TfMain.actOpenExecute(Sender: TObject);
