@@ -15,6 +15,7 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.Title := 'StockViewer';
   TStyleManager.TrySetStyle('Luna');
   Application.CreateForm(TfMain, fMain);
   Application.Run;
