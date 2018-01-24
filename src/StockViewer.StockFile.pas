@@ -148,15 +148,15 @@ begin
     begin
       Result := TStringList.Create;
       for i := 0 to Pred(StockNode.Count) do
-      with StockNode[i] do
-        Result.Add(
-          '"' + ProductCategory + '";' +
-          '"' + ProductCode + '";' +
-          '"' + ProductDescription + '";' +
-          '"' + ProductNumberCode + '";' +
-                ClosingStockQuantity + ';' +
-          '"' + UnitOfMeasure + '"'
-        );
+        with StockNode[i] do
+          Result.Add(
+            '"' + ProductCategory + '";' +
+            '"' + ProductCode + '";' +
+            '"' + ProductDescription + '";' +
+            '"' + ProductNumberCode + '";' +
+                  ClosingStockQuantity + ';' +
+            '"' + UnitOfMeasure + '"'
+          );
     end
   );
 end;
