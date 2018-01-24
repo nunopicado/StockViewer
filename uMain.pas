@@ -48,7 +48,7 @@ uses
   ;
 
 type
-  TfMain = class(TForm, IStockView)
+  TfMain = class(TForm)
     dlgOpen: TOpenDialog;
     sbMain: TStatusBar;
     pnlHeader: TPanel;
@@ -78,10 +78,8 @@ type
     cProductCount = 1;
     cStockFile    = 2;
   private
+    Stock: IStockFile;
     procedure LoadXML(Filename: string);
-  public
-    function UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
-    function UpdateData(StockData: IMatrix<string>): IStockView;
   end;
 
 var
@@ -89,32 +87,7 @@ var
 
 implementation
 
-uses
-    RO.TMatrix
-  ;
-
 {$R *.dfm}
-
-function TfMain.UpdateData(StockData: IMatrix<string>): IStockView;
-var
-  Row: Integer;
-begin
-  csvStock.Open;
-  csvStock.DeleteRows(1, csvStock.RecordCount);
-  TFloatField(csvStock.FieldByName('ClosingStockQuantity')).DisplayFormat := '#.000';
-  for Row := 1 to Pred(StockData.RowCount) do
-    begin
-      csvStock.Append;
-      csvStock.FieldValues['ProductCategory']      := StockData.Cell(0, Row);
-      csvStock.FieldValues['ProductCode']          := StockData.Cell(1, Row);
-      csvStock.FieldValues['ProductDescription']   := StockData.Cell(2, Row);
-      csvStock.FieldValues['ProductNumberCode']    := StockData.Cell(3, Row);
-      csvStock.FieldValues['ClosingStockQuantity'] := StockData.Cell(4, Row);
-      csvStock.FieldValues['UnitOfMeasure']        := StockData.Cell(5, Row);
-      csvStock.Post;
-    end;
-  csvStock.RecNo := 1;
-end;
 
 procedure TfMain.FormCreate(Sender: TObject);
 begin
@@ -134,25 +107,22 @@ begin
     then LoadXML(dlgOpen.FileName);
 end;
 
-function TfMain.UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
+procedure TfMain.LoadXML(Filename: string);
 const
   cNoStock: array [Boolean] of string = ('Não', 'Sim');
 begin
-  lblEdTaxRegistrationNumber.Caption := NIF.ToString;
-  lblEdFiscalYear.Caption            := FiscalYear.ToString;
-  lblEdEndDate.Caption               := DateTimeToStr(EndPeriod);
-  lblEdNoStock.Caption               := cNoStock[NoStock];
-end;
-
-procedure TfMain.LoadXML(Filename: string);
-begin
   sbMain.Panels[cStockFile].Text := Filename;
-  TStockFile.New(
-    Self,
-    FileName,
-    TMatrix<string>.New
-  )
-    .Open;
+  Stock := TStockFile.New(FileName);
+  with Stock do
+    begin
+      lblEdTaxRegistrationNumber.Caption := Header.TaxRegistrationNumber.ToString;
+      lblEdFiscalYear.Caption            := Header.FiscalYear.ToString;
+      lblEdEndDate.Caption               := FormatDateTime('yyyy-mm-dd', Header.EndDate);
+      lblEdNoStock.Caption               := cNoStock[Header.NoStock];
+      csvStock.AssignFromStrings(Data.Content);
+      csvStock.Open;
+      TFloatField(csvStock.FieldByName('ClosingStockQuantity')).DisplayFormat := '#.000';
+    end;
 end;
 
 end.

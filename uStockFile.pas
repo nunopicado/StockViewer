@@ -4,100 +4,198 @@ interface
 
 uses
     Stock_1_2
-  , RO.IMatrix
+  , RO.IValue
+  , Classes
   ;
 
 type
-  IStockView = interface
-  ['{BB46A868-8D6B-4145-BF18-3933F60D0C2C}']
-    function UpdateHeader(NIF: Integer; FiscalYear: Word; EndPeriod: TDateTime; NoStock: Boolean): IStockView;
-    function UpdateData(StockData: IMatrix<string>): IStockView;
+  IStockHeader = interface(IInvokable)
+  ['{36D9C270-C8D0-46B0-8E78-5C0EF68B75DA}']
+    function TaxRegistrationNumber: Integer;
+    function FiscalYear: Integer;
+    function EndDate: TDateTime;
+    function NoStock: Boolean;
   end;
 
-  IStockFile = interface
-  ['{BCC7FDC6-37BF-4B3F-B629-E35C52C45521}']
-    function Open: IStockFile;
+  IStockData = interface(IInvokable)
+  ['{3B6C0BBC-C900-4E28-A604-4B881328D1AD}']
+    function Fields: string;
+    function Content: TStrings;
+  end;
+
+  IStockFile = interface(IInvokable)
+  ['{E4A04C2A-90C0-4C18-974D-707F521DC9A7}']
+    function Header: IStockHeader;
+    function Data: IStockData;
   end;
 
   TStockFile = class(TInterfacedObject, IStockFile)
   private var
-    FView : IStockView;
-    FXml  : IXMLStockFile;
-    FData : IMatrix<string>;
-  private
-    constructor Create(StockView: IStockView; StockFile: string);
-    procedure Header;
-    procedure Data;
+    FXml    : IXMLStockFile;
+    FHeader : IValue<IStockHeader>;
+    FData   : IValue<IStockData>;
   public
-    class function New(StockView: IStockView; StockFile: string): IStockFile;
-    function Open: IStockFile;
+    constructor Create(const StockFile: string); reintroduce;
+    class function New(const StockFile: string): IStockFile;
+    function Header: IStockHeader;
+    function Data: IStockData;
+  end;
+
+  TStockHeader = class(TInterfacedObject, IStockHeader)
+  private
+    FHeaderNode: IXMLStockHeader;
+  public
+    constructor Create(const HeaderNode: IXMLStockHeader); reintroduce;
+    class function New(const HeaderNode: IXMLStockHeader): IStockHeader;
+    function TaxRegistrationNumber: Integer;
+    function FiscalYear: Integer;
+    function EndDate: TDateTime;
+    function NoStock: Boolean;
+  end;
+
+  TStockData = class(TInterfacedObject, IStockData)
+  private
+    FStockNode: IXMLStockList;
+    FContent: IValue<TStrings>;
+  public
+    constructor Create(const StockNode: IXMLStockList); reintroduce;
+    destructor Destroy; override;
+    class function New(const StockNode: IXMLStockList): IStockData;
+    function Fields: string;
+    function Content: TStrings;
   end;
 
 implementation
 
 uses
     SysUtils
-  , RO.TMatrix
+  , RO.TValue
   , Variants
   ;
 
 { TStockFile }
 
-constructor TStockFile.Create(StockView: IStockView; StockFile: string);
+constructor TStockFile.Create(const StockFile: string);
 begin
-  FView := StockView;
-  FXml  := LoadStockFile(StockFile);
+  FXml := LoadStockFile(StockFile);
+  if FXml.Stock.ChildNodes.Count > 0
+    then
+      FHeader := TValue<IStockHeader>.New(
+        function : IStockHeader
+        begin
+          Result := TStockHeader.New(FXml.StockHeader);
+        end
+      );
   if FXml.Stock.ChildNodes.Count > 1
     then
-      FData := TMatrix<string>.New(
-        FXml.Stock.ChildNodes[1].ChildNodes.Count,
-        FXml.Stock.Count + 1
+      FData := TValue<IStockData>.New(
+        function : IStockData
+        begin
+          Result := TStockData.New(FXml.Stock);
+        end
       );
 end;
 
-procedure TStockFile.Data;
+function TStockFile.Data: IStockData;
+begin
+  Result := FData.Value;
+end;
+
+function TStockFile.Header: IStockHeader;
+begin
+  Result := FHeader.Value;
+end;
+
+class function TStockFile.New(const StockFile: string): IStockFile;
+begin
+  Result := Create(StockFile);
+end;
+
+{ TStockHeader }
+
+constructor TStockHeader.Create(const HeaderNode: IXMLStockHeader);
+begin
+  FHeaderNode := HeaderNode;
+end;
+
+function TStockHeader.EndDate: TDateTime;
+begin
+  Result := VarToDateTime(FHeaderNode.EndDate);
+end;
+
+function TStockHeader.FiscalYear: Integer;
+begin
+  Result := FHeaderNode.FiscalYear;
+end;
+
+class function TStockHeader.New(const HeaderNode: IXMLStockHeader): IStockHeader;
+begin
+  Result := Create(HeaderNode);
+end;
+
+function TStockHeader.NoStock: Boolean;
+begin
+  Result := FHeaderNode.NoStock;
+end;
+
+function TStockHeader.TaxRegistrationNumber: Integer;
+begin
+  Result := FHeaderNode.TaxRegistrationNumber;
+end;
+
+{ TStockData }
+
+function TStockData.Content: TStrings;
+begin
+  Result := FContent.Value;
+end;
+
+constructor TStockData.Create(const StockNode: IXMLStockList);
+begin
+  FStockNode := StockNode;
+  FContent   := TValue<TStrings>.New(
+    function : TStrings
+    var
+      i: Integer;
+    begin
+      Result := TStringList.Create;
+      for i := 0 to Pred(StockNode.Count) do
+      with StockNode[i] do
+        Result.Add(
+          '"' + ProductCategory + '";' +
+          '"' + ProductCode + '";' +
+          '"' + ProductDescription + '";' +
+          '"' + ProductNumberCode + '";' +
+          '"' + ClosingStockQuantity + '";' +
+          '"' + UnitOfMeasure + '"'
+        );
+    end
+  );
+end;
+
+destructor TStockData.Destroy;
+begin
+  if Assigned(FContent.Value)
+    then FContent.Value.Free;
+  inherited;
+end;
+
+function TStockData.Fields: string;
 var
-  i: Integer;
+  i: Byte;
 begin
-  if FXml.Stock.ChildNodes.Count <= 1
-    then Exit;
-
-  for i := 0 to Pred(FXml.Stock.ChildNodes[1].ChildNodes.Count) do
-    FData.Edit(i, 0, FXml.Stock.ChildNodes[1].ChildNodes[i].NodeName.Substring(3));
-  for i := 0 to Pred(FXml.Stock.Count) do
-    with FXml.Stock[i] do
-      begin
-        FData.Edit(0, Succ(i), ProductCategory);
-        FData.Edit(1, Succ(i), ProductCode);
-        FData.Edit(2, Succ(i), ProductDescription);
-        FData.Edit(3, Succ(i), ProductNumberCode);
-        FData.Edit(4, Succ(i), ClosingStockQuantity);
-        FData.Edit(5, Succ(i), UnitOfMeasure);
-      end;
-  FView
-    .UpdateData(FData);
+  Result := '';
+  for i := 0 to Pred(FStockNode.ChildNodes[1].ChildNodes.Count) do
+    begin
+      if i > 0
+        then Result := Result + ';';
+      Result := Result + FStockNode.ChildNodes[1].ChildNodes[i].NodeName.Substring(3);
+    end;
 end;
 
-procedure TStockFile.Header;
+class function TStockData.New(const StockNode: IXMLStockList): IStockData;
 begin
-  with FXml.StockHeader do
-    FView.UpdateHeader(
-      TaxRegistrationNumber,
-      FiscalYear,
-      VarToDateTime(EndDate),
-      NoStock
-    );
-end;
-
-class function TStockFile.New(StockView: IStockView; StockFile: string): IStockFile;
-begin
-  Result := Create(StockView, StockFile);
-end;
-
-function TStockFile.Open: IStockFile;
-begin
-  Header;
-  Data;
+  Result := Create(StockNode);
 end;
 
 end.
