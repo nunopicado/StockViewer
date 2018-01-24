@@ -25,11 +25,11 @@ type
     FXml  : IXMLStockFile;
     FData : IMatrix<string>;
   private
-    constructor Create(StockView: IStockView; StockFile: string; Data : IMatrix<string>);
+    constructor Create(StockView: IStockView; StockFile: string);
     procedure Header;
     procedure Data;
   public
-    class function New(StockView: IStockView; StockFile: string; Data : IMatrix<string>): IStockFile;
+    class function New(StockView: IStockView; StockFile: string): IStockFile;
     function Open: IStockFile;
   end;
 
@@ -43,13 +43,13 @@ uses
 
 { TStockFile }
 
-constructor TStockFile.Create(StockView: IStockView; StockFile: string; Data : IMatrix<string>);
+constructor TStockFile.Create(StockView: IStockView; StockFile: string);
 begin
   FView := StockView;
   FXml  := LoadStockFile(StockFile);
   if FXml.Stock.ChildNodes.Count > 1
     then
-      FData := Data.Resize(
+      FData := TMatrix<string>.New(
         FXml.Stock.ChildNodes[1].ChildNodes.Count,
         FXml.Stock.Count + 1
       );
@@ -89,9 +89,9 @@ begin
     );
 end;
 
-class function TStockFile.New(StockView: IStockView; StockFile: string; Data : IMatrix<string>): IStockFile;
+class function TStockFile.New(StockView: IStockView; StockFile: string): IStockFile;
 begin
-  Result := Create(StockView, StockFile, Data);
+  Result := Create(StockView, StockFile);
 end;
 
 function TStockFile.Open: IStockFile;
