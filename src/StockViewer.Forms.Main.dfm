@@ -130,21 +130,26 @@ object fMain: TfMain
     Height = 585
     Align = alClient
     TabOrder = 2
+    LockedStateImageOptions.Text = 'Por favor aguarde...'
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = 'MoneyTwins'
     ExplicitTop = 33
     ExplicitHeight = 608
     object gridStockDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
+      Navigator.InfoPanel.DisplayMask = '[RecordIndex] de [RecordCount]'
+      FindPanel.InfoText = 'Inserir texto de pesquisa...'
       DataController.DataSource = dsStock
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      NewItemRow.InfoText = 'Clicar aqui para adicionar um novo registo'
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.CellSelect = False
+      OptionsView.NoDataToDisplayInfoText = '<Nenhum produto encontrado>'
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderFilterButtonShowMode = fbmButton
