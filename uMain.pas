@@ -16,7 +16,7 @@ uses
   , Vcl.ComCtrls
   , Vcl.StdCtrls
   , Vcl.ExtCtrls
-  , uStockFile
+  , StockViewer.StockFile
   , RO.IMatrix
   , Data.DB
   , JvCsvData

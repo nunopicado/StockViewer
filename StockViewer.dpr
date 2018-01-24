@@ -6,7 +6,7 @@ uses
   Stock_1_2 in 'Stock_1_2.pas',
   Vcl.Themes,
   Vcl.Styles,
-  uStockFile in 'uStockFile.pas',
+  StockViewer.StockFile in 'StockViewer.StockFile.pas',
   RO.IMatrix;
 
 {$R *.res}
