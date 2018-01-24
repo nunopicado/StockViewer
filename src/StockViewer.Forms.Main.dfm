@@ -35,11 +35,13 @@ object fMain: TfMain
   end
   object pnlHeader: TPanel
     Left = 0
-    Top = 0
+    Top = 23
     Width = 906
     Height = 33
     Align = alTop
+    BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 0
     object lblTaxRegistrationNumber: TLabel
       Left = 16
       Top = 10
@@ -123,15 +125,16 @@ object fMain: TfMain
   end
   object gridStock: TcxGrid
     Left = 0
-    Top = 33
+    Top = 56
     Width = 906
-    Height = 608
+    Height = 585
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = 'MoneyTwins'
+    ExplicitTop = 33
+    ExplicitHeight = 608
     object gridStockDBTableView1: TcxGridDBTableView
-      OnDblClick = gridDblClick
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsStock
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -197,10 +200,30 @@ object fMain: TfMain
       GridView = gridStockDBTableView1
     end
   end
+  object ActionToolBar1: TActionToolBar
+    Left = 0
+    Top = 0
+    Width = 906
+    Height = 23
+    ActionManager = mgrMain
+    Caption = 'ActionToolBar1'
+    Color = clMenuBar
+    ColorMap.DisabledFontColor = 7171437
+    ColorMap.HighlightColor = clWhite
+    ColorMap.BtnSelectedFont = clBlack
+    ColorMap.UnusedColor = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    Spacing = 0
+  end
   object dlgOpen: TOpenDialog
     Filter = 'Ficheiro XML de invent'#225'rios v1.02|*.xml'
-    Left = 576
-    Top = 224
+    Left = 64
+    Top = 232
   end
   object csvStock: TJvCsvDataSet
     CsvFieldDef = 
@@ -220,5 +243,36 @@ object fMain: TfMain
     DataSet = csvStock
     Left = 64
     Top = 480
+  end
+  object mgrMain: TActionManager
+    ActionBars = <
+      item
+        Items.CaptionOptions = coAll
+        Items = <
+          item
+            Action = actOpen
+          end
+          item
+            Action = actExport
+          end>
+        ActionBar = ActionToolBar1
+      end>
+    Left = 64
+    Top = 352
+    StyleName = 'Platform Default'
+    object actOpen: TAction
+      Caption = '&Abrir Invent'#225'rio XML'
+      OnExecute = actOpenExecute
+    end
+    object actExport: TAction
+      Caption = '&Exportar Invent'#225'rio CSV'
+      OnExecute = actExportExecute
+    end
+  end
+  object dlgSave: TSaveDialog
+    DefaultExt = '*.csv'
+    Filter = 'Invent'#225'rio CSV|*.csv'
+    Left = 64
+    Top = 288
   end
 end

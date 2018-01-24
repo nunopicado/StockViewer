@@ -45,6 +45,12 @@ uses
   , cxStyles
   , dxSkinOffice2010Blue
   , dxSkinscxPCPainter
+  , Vcl.ToolWin
+  , Vcl.ActnMan
+  , Vcl.ActnCtrls
+  , System.Actions
+  , Vcl.ActnList
+  , Vcl.PlatformDefaultStyleActnCtrls
   ;
 
 type
@@ -71,9 +77,15 @@ type
     gridStockDBTableView1Column4: TcxGridDBColumn;
     gridStockDBTableView1Column5: TcxGridDBColumn;
     gridStockDBTableView1Column6: TcxGridDBColumn;
-    procedure gridDblClick(Sender: TObject);
+    mgrMain: TActionManager;
+    actOpen: TAction;
+    actExport: TAction;
+    ActionToolBar1: TActionToolBar;
+    dlgSave: TSaveDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure actOpenExecute(Sender: TObject);
+    procedure actExportExecute(Sender: TObject);
   private const
     cProductCount = 1;
     cStockFile    = 2;
@@ -89,6 +101,18 @@ implementation
 
 {$R *.dfm}
 
+procedure TfMain.actExportExecute(Sender: TObject);
+begin
+  if dlgSave.Execute
+    then csvStock.SaveToFile(dlgSave.FileName);
+end;
+
+procedure TfMain.actOpenExecute(Sender: TObject);
+begin
+  if dlgOpen.Execute
+    then LoadXML(dlgOpen.FileName);
+end;
+
 procedure TfMain.FormCreate(Sender: TObject);
 begin
   csvStock.DecimalSeparator  := ',';
@@ -99,12 +123,6 @@ procedure TfMain.FormShow(Sender: TObject);
 begin
   if (ParamCount = 1) and (FileExists(ParamStr(1)))
     then LoadXML(ParamStr(1));
-end;
-
-procedure TfMain.gridDblClick(Sender: TObject);
-begin
-  if dlgOpen.Execute
-    then LoadXML(dlgOpen.FileName);
 end;
 
 procedure TfMain.LoadXML(Filename: string);
