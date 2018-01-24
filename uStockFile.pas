@@ -32,8 +32,8 @@ type
   TStockFile = class(TInterfacedObject, IStockFile)
   private var
     FXml    : IXMLStockFile;
-    FHeader : IValue<IStockHeader>;
-    FData   : IValue<IStockData>;
+    FHeader : IStockHeader;
+    FData   : IStockData;
   public
     constructor Create(const StockFile: string); reintroduce;
     class function New(const StockFile: string): IStockFile;
@@ -79,31 +79,19 @@ constructor TStockFile.Create(const StockFile: string);
 begin
   FXml := LoadStockFile(StockFile);
   if FXml.Stock.ChildNodes.Count > 0
-    then
-      FHeader := TValue<IStockHeader>.New(
-        function : IStockHeader
-        begin
-          Result := TStockHeader.New(FXml.StockHeader);
-        end
-      );
+    then FHeader := TStockHeader.New(FXml.StockHeader);
   if FXml.Stock.ChildNodes.Count > 1
-    then
-      FData := TValue<IStockData>.New(
-        function : IStockData
-        begin
-          Result := TStockData.New(FXml.Stock);
-        end
-      );
+    then FData := TStockData.New(FXml.Stock);
 end;
 
 function TStockFile.Data: IStockData;
 begin
-  Result := FData.Value;
+  Result := FData;
 end;
 
 function TStockFile.Header: IStockHeader;
 begin
-  Result := FHeader.Value;
+  Result := FHeader;
 end;
 
 class function TStockFile.New(const StockFile: string): IStockFile;
