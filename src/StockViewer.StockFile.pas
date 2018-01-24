@@ -154,7 +154,7 @@ begin
           '"' + ProductCode + '";' +
           '"' + ProductDescription + '";' +
           '"' + ProductNumberCode + '";' +
-          '"' + ClosingStockQuantity + '";' +
+                ClosingStockQuantity + ';' +
           '"' + UnitOfMeasure + '"'
         );
     end
