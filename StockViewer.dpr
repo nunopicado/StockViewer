@@ -2,7 +2,7 @@
 
 uses
   Vcl.Forms,
-  uMain in 'uMain.pas' {fMain},
+  StockViewer.Forms.Main in 'StockViewer.Forms.Main.pas' {fMain},
   Stock_1_2 in 'Stock_1_2.pas',
   Vcl.Themes,
   Vcl.Styles,

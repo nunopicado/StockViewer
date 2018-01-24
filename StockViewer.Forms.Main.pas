@@ -1,4 +1,4 @@
-﻿unit uMain;
+﻿unit StockViewer.Forms.Main;
 
 interface
 
