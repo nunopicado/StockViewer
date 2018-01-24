@@ -7,6 +7,7 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   StockViewer.StockFile in 'StockViewer.StockFile.pas',
+  SysUtils,
   RO.IMatrix;
 
 {$R *.res}
@@ -16,6 +17,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.Title := 'StockViewer';
+  FormatSettings.DecimalSeparator := ',';
   TStyleManager.TrySetStyle('Luna');
   Application.CreateForm(TfMain, fMain);
   Application.Run;

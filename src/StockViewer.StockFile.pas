@@ -155,7 +155,7 @@ begin
             '"' + ProductCode + '";' +
             '"' + ProductDescription + '";' +
             '"' + ProductNumberCode + '";' +
-                  ClosingStockQuantity + ';' +
+                  StringReplace(ClosingStockQuantity, '.', ',', [rfReplaceAll]) + ';' +
             '"' + UnitOfMeasure + '"'
           );
     end
